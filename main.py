@@ -21,6 +21,19 @@ DETAIL = {
                 "`git commit -m [message]`",
                 "Default message = 'No message provided'",
                 ],
+            "push" : [
+                "`git push`",
+                "Pushes comitted changes to origin on current branch",
+                ],
+            "pull" : [
+                "`git pull`",
+                "Pulls the most recent snapshot of the current branch",
+                "from the remote repo",
+                ],
+            "branches" : [
+                "`git branch --list`",
+                "Displays the list of existing branches"
+                ]
             },
 
 
@@ -55,8 +68,17 @@ class InvalidTagException(Exception):
         usage()
         super().__init__(f"INVALID TAG `{tag}`")
 
+class IncompatibleTagException(Exception):
+    def __init__(self, subcmd, tag):
+        usage()
+        msg = f"The tag `{tag}` is not compatible with the subcommand `{subcmd}`"
+        super().__init__(msg)
+
 # Classes
 class Gutils:
+    # Class attibutes
+    default_message = 'No message provided'
+
     # Magic methods
     def __init__(self,args = None):
         self.subcommand, self.flags, self.message = self.parse_args(args)
@@ -79,7 +101,7 @@ class Gutils:
     def parse_args(self, args):
         # Set message to default, if its not updated, thats what
         # it will be
-        msg = 'No message provided'
+        msg = Gutils.default_message 
         flags = None
         
         # Handle empty arg
@@ -105,23 +127,48 @@ class Gutils:
             if args:
                 msg = " ".join(args)
         return (subcommand, flags, msg)
+
     def run(self):
         scmd = self.subcommand
         flags = self.flags
         msg = self.message
-        run = "echo hello world"
-        
+        self.clear()
         if scmd == "add":
-            run = "git add ."
-            pass
+            if flags not in ["m"] and flags is not None: 
+                raise IncompatibleTagException("add", flags)
+            add = "." 
+            if msg != Gutils.default_message:
+                add = msg.split()
+            self.git_add(add)
         elif scmd == "commit":
-            pass
+            if flags == "a":
+                self.git_add()
+            self.git_commit(msg)
+        self.git_status()
         line(20)
-        print("self.run() call")
         print(f"scmd = {scmd}\nflags = {flags}\nmsg = {msg}")
         line(20)
-        os.system(run)
         
+    def git_add(self, files = ["."]):
+        st = " ".join(files)
+        os.system(f"git add {st}")
+
+    def git_status(self):
+        os.system("git status")
+    
+    def clear(self):
+        os.system("clear")
+
+    def git_commit(self, msg):
+        cm = f"git commit -m {msg}"
+        print("run", cm)
+        os.system(cm)
+
+    def git_push(self):
+        os.system("git push")
+
+    def git_pull(self):
+        os.system("git pull")
 
 
 
