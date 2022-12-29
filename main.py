@@ -7,11 +7,10 @@ import os
 # Command line args
 cmdline = sys.argv
 fname = re.findall("\w*\.py$", cmdline[0])[0]
-
 args = cmdline[1:]
 
 # Constants
-DEFAULT_MESSAGE ='No message provided' 
+DEFAULT_MESSAGE ='No commit message provided' 
 DETAIL = { 
         "subcommands" : { 
             "add" : [
@@ -20,7 +19,7 @@ DETAIL = {
 
             "commit" : [
                 "`git commit -m [message]`",
-                "Default message = 'No message provided'",
+                f"Default message = '{DEFAULT_MESSAGE}'",
                 ],
             "push" : [
                 "`git push`",
@@ -38,6 +37,10 @@ DETAIL = {
             "status" : [
                 "`git status`",
                 "Displays current index"
+                ],
+            "gitutils" : [
+                "`usage()`",
+                "Show this usage message"
                 ]
             },
 
@@ -172,6 +175,9 @@ class Gutils:
             if flags is not None or msg != Gutils.default_message:
                 raise IncompatibilityException(scmd, flags, msg)
             self.git_branches()
+        elif scmd == "gitutils":
+            usage()
+            exit(0)
         else:
             assert False, f'Subcommand `{scmd}` not implemented'
         self.git_status()
@@ -251,7 +257,7 @@ def syscall(cmd, echo = True):
     os.system(cmd)
 
 
-# -=- program testing -=-
-ob = Gutils(args)
-print(ob)
-ob.run()
+# -=- Run program with commands passed in the command line -=-
+if __name__ == "__main__":
+    ob = Gutils(args)
+    ob.run()
