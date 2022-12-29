@@ -175,9 +175,10 @@ class Gutils:
         else:
             assert False, f'Subcommand `{scmd}` not implemented'
         self.git_status()
-        line(20)
-        print(f"scmd = {scmd}\nflags = {flags}\nmsg = {msg}")
-        line(20)
+        # Debugging print statments:
+        #line(20)
+        #print(f"scmd = {scmd}\nflags = {flags}\nmsg = {msg}")
+        #line(20)
         
     def git_add(self, files = ["."]):
         st = " ".join(files)
