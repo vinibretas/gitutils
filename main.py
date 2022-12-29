@@ -148,6 +148,16 @@ class Gutils:
             if flags == "a":
                 self.git_add()
             self.git_commit(msg)
+        elif scmd == "status":
+            self.git_status()
+        elif scmd == "push":
+            self.git_push()
+        elif scmd == "pull":
+            self.git_pull()
+        elif scmd == "branches":
+            self.git_branches()
+        else:
+            assert False, f'Subcommand `{scmd}` not implemented'
         self.git_status()
         line(20)
         print(f"scmd = {scmd}\nflags = {flags}\nmsg = {msg}")
