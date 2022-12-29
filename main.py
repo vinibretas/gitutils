@@ -149,7 +149,7 @@ class Gutils:
                 self.git_add()
             self.git_commit(msg)
         elif scmd == "status":
-            self.git_status()
+            pass
         elif scmd == "push":
             self.git_push()
         elif scmd == "pull":
