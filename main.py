@@ -33,6 +33,10 @@ DETAIL = {
             "branches" : [
                 "`git branch --list`",
                 "Displays the list of existing branches"
+                ],
+            "status" : [
+                "`git status`",
+                "Displays current index"
                 ]
             },
 
@@ -151,24 +155,26 @@ class Gutils:
         
     def git_add(self, files = ["."]):
         st = " ".join(files)
-        os.system(f"git add {st}")
+        syscall(f"git add {st}")
 
     def git_status(self):
-        os.system("git status")
+        syscall("git status", False)
     
     def clear(self):
-        os.system("clear")
+        syscall("clear", False)
 
     def git_commit(self, msg):
-        cm = f"git commit -m {msg}"
-        print("run", cm)
-        os.system(cm)
+        cm = f'git commit -m "{msg}"'
+        syscall(cm)
 
     def git_push(self):
-        os.system("git push")
+        syscall("git push", False)
 
     def git_pull(self):
-        os.system("git pull")
+        syscall("git pull", False)
+    
+    def git_branches(self):
+        syscall("git branches --list", False)
 
 
 
@@ -187,7 +193,7 @@ def usage():
     for key,value in DETAIL.items():
         messages.append(f"\n{tab}{key}:")
         for k,v in value.items():
-            messages.append(f"{tab*2}{k:>6} - {v[0]}")
+            messages.append(f"{tab*2}{k:>8} - {v[0]}")
             for k2 in v[1:]:
                 messages.append(f"{tab*4}{k2}")
 
@@ -212,6 +218,10 @@ def line(n, offset = 1):
     n = n // 2 
     print("-="*n)
 
+def syscall(cmd, echo = True):
+    if echo:
+        print(f"RUNNING `{cmd}`")
+    os.system(cmd)
 
 
 # -=- program testing -=-
