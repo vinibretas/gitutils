@@ -11,6 +11,7 @@ fname = re.findall("\w*\.py$", cmdline[0])[0]
 args = cmdline[1:]
 
 # Constants
+DEFAULT_MESSAGE ='No message provided' 
 DETAIL = { 
         "subcommands" : { 
             "add" : [
@@ -72,16 +73,23 @@ class InvalidTagException(Exception):
         usage()
         super().__init__(f"INVALID TAG `{tag}`")
 
-class IncompatibleTagException(Exception):
-    def __init__(self, subcmd, tag):
+class IncompatibilityException(Exception):
+    def __init__(self, subcmd, tag = None, ms = DEFAULT_MESSAGE):
+        print(tag)
+        if tag is not None and ms != DEFAULT_MESSAGE:
+            precmd = f"The tag `{tag}` and the param `msg` aren't"
+        elif tag is None and ms != Gutils.default_message:
+            precmd = f"You can't pass the param `msg` as it isn't"
+        else:
+            precmd = f"The tag `{tag}` is not"
         usage()
-        msg = f"The tag `{tag}` is not compatible with the subcommand `{subcmd}`"
+        msg = f"{precmd} compatible with the subcommand `{subcmd}`"
         super().__init__(msg)
 
 # Classes
 class Gutils:
     # Class attibutes
-    default_message = 'No message provided'
+    default_message = DEFAULT_MESSAGE
 
     # Magic methods
     def __init__(self,args = None):
@@ -139,7 +147,7 @@ class Gutils:
         self.clear()
         if scmd == "add":
             if flags not in ["m"] and flags is not None: 
-                raise IncompatibleTagException("add", flags)
+                raise IncompatibilityException("add", flags)
             add = "." 
             if msg != Gutils.default_message:
                 add = msg.split()
@@ -149,12 +157,20 @@ class Gutils:
                 self.git_add()
             self.git_commit(msg)
         elif scmd == "status":
-            pass
+            if flags is not None or msg != Gutils.default_message:
+                raise IncompatibilityException(scmd, flags, msg)
         elif scmd == "push":
+            if flags is not None or msg != Gutils.default_message:
+                self.git_add()
+                self.git_commit(msg)
             self.git_push()
         elif scmd == "pull":
+            if flags is not None or msg != Gutils.default_message:
+                raise IncompatibilityException(scmd, flags, msg)
             self.git_pull()
         elif scmd == "branches":
+            if flags is not None or msg != Gutils.default_message:
+                raise IncompatibilityException(scmd, flags, msg)
             self.git_branches()
         else:
             assert False, f'Subcommand `{scmd}` not implemented'
