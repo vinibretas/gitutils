@@ -1,7 +1,7 @@
-### This is a simple python script that aims to 'automate' a few git utilities
+### This is a simple python script to 'automate' a few git utils
 
-# This was created mainly for educational purpouses and to be used alongside with
-# bash aliases on the a-shell iOS app
+This was created mainly for educational purpouses and to be used alongside with
+bash aliases on the a-shell iOS app
 
 ## Instalation
 
@@ -19,5 +19,4 @@ alias status="python3 ~/Documents/bin/gutils-main.py status"
 alias st="python3 ~/Documents/bin/gutils-main.py status"
 alias gitutils="python3 ~/Documents/bin/gutils-main.py gitutils"
 alias gutils="python3 ~/Documents/bin/gutils-main.py gitutils"
-
 ``` 
