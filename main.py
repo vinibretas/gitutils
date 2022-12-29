@@ -178,10 +178,10 @@ class Gutils:
         syscall(cm)
 
     def git_push(self):
-        syscall("git push", False)
+        syscall("git push")
 
     def git_pull(self):
-        syscall("git pull", False)
+        syscall("git pull")
     
     def git_branches(self):
         syscall("git branches --list", False)
