@@ -1,3 +1,4 @@
+# Last modified: terça 03/jan/2023 15:27:48
 # Script to automate some git utils
 # Imports
 import sys
